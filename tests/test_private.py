@@ -53,6 +53,7 @@ def test_sum_of_squares_of_digits(num, ans):
         (245428, True),
         (-8788, "Exception"),
         (54775689, False),
+        (441954225, True),
     ],
 )
 def test_is_happy_number(num, ans):
@@ -82,6 +83,10 @@ def test_is_happy_number(num, ans):
         ("P@ssw0rd", False),
         ("   ", False),
         ("1_@m_the_grAder 0f_d$ci510", False),
+        ("Dat@,SCIENCE897", True),
+        ("0000", False),
+        ("00_00_AB_ab#", True),
+        ("qwerty12345&*(&%&^$&)+897", False),
     ],
 )
 def test_is_acceptable(password, ans):
