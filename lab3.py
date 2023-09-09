@@ -1,27 +1,30 @@
 import string
 
+
 def sum_of_squares_of_digits(num: int) -> int:
     try:
-        if num<0:
-            raise Exception('Invalid Input')
-        sum = 0 
-        while num>0:
+        if num < 0:
+            raise Exception("Invalid Input")
+        sum = 0
+        while num > 0:
             digit = num % 10
-            sum+=digit**2
-            num = num//10
+            sum += digit**2
+            num = num // 10
         return sum
     except:
-        raise Exception('Invalid Input')
+        raise Exception("Invalid Input")
+
 
 def is_happy_number(num: int) -> bool:
     try:
-        if num<0:
-            raise Exception('Invalid Input')
+        if num < 0:
+            raise Exception("Invalid Input")
+
         def get_next(n):
             total_sum = 0
             while n > 0:
                 n, digit = divmod(n, 10)
-                total_sum += digit ** 2
+                total_sum += digit**2
             return total_sum
 
         seen = set()
@@ -31,8 +34,9 @@ def is_happy_number(num: int) -> bool:
 
         return num == 1
     except:
-        raise Exception('Invalid Input')
-    
+        raise Exception("Invalid Input")
+
+
 def is_acceptable(password: str) -> bool:
     try:
         # Condition 1: Length between 10 and 20
@@ -43,9 +47,9 @@ def is_acceptable(password: str) -> bool:
         upper_count = 0
         special_count = 0
         digit_count = 0
-        
+
         allowed_special_chars = set(string.punctuation)
-        
+
         for char in password:
             if char.islower():
                 lower_count += 1
@@ -55,7 +59,7 @@ def is_acceptable(password: str) -> bool:
                 special_count += 1
             elif char.isdigit():
                 digit_count += 1
-            elif char == ' ':
+            elif char == " ":
                 continue
             else:
                 return False
@@ -64,5 +68,4 @@ def is_acceptable(password: str) -> bool:
         else:
             return False
     except:
-        raise Exception('Invalid Input')
-
+        raise Exception("Invalid Input")
