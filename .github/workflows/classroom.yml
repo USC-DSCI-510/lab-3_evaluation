@@ -80,7 +80,7 @@ jobs:
           - name: Extract Marks from logs
             id: marks
             run: |
-              pytest_logs=$(echo "$pytest_logs" | sed 's/\x1B\[[0-9;]*[JKmsu]//g')
+              pytest_logs=$(echo $pytest_logs | sed 's/\x1B\[[0-9;]*[JKmsu]//g')
 
               max_points_possible=$(echo $pytest_logs | grep -oP "collected \K\d+")
     
