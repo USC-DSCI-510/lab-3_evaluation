@@ -15,7 +15,7 @@ permissions:
 jobs:
     run-auto-grade:
         name: Autograding
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-20.04
 
         outputs:
           bonus_points_gained: ${{ steps.set_bonus_points.outputs.bonus_points_gained }}
