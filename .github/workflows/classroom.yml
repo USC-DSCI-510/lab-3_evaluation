@@ -58,7 +58,8 @@ jobs:
               id: set_pytest_log
               run: |
                 pytest -v
-                echo "pytest_logs=$(pytest -v > output.log)" >> "$GITHUB_OUTPUT"
+                pytest -v > output.log
+                echo "pytest_logs=$(cat output.log)" >> "$GITHUB_OUTPUT"
               continue-on-error: true
 
     generate-report:
