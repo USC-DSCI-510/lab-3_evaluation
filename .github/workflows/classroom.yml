@@ -64,11 +64,11 @@ jobs:
 
                 # Setting it as environment variable
                 pytest_logs=$(cat output.log)
-                { 
-                  echo "pytest_logs<<EOF" 
-                  $pytest_logs 
-                  echo EOF
-                } >> $GITHUB_OUTPUT
+
+                EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+                echo "pytest_logs<<$EOF" >> $GITHUB_OUTPUT
+                echo "$pytest_logs" >> $GITHUB_OUTPUT
+                echo "$EOF" >> $GITHUB_OUTPUT
 
     generate-report:
         name: Grading Report Generation
