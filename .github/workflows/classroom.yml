@@ -113,13 +113,14 @@ jobs:
               repo_name=$(basename "$GITHUB_REPOSITORY")
               repo_url=$(gh repo view $GITHUB_REPOSITORY --json url -q '.url')
               name_with_owner=$(gh repo view $GITHUB_REPOSITORY --json nameWithOwner -q '.nameWithOwner')
-    
-              # You can fetch other metadata as needed
+
+              username="${repo_name#*_}"
     
               echo "student_login=$student_login" >> "$GITHUB_ENV"
               echo "repo_name=$repo_name" >> "$GITHUB_ENV"
               echo "repo_url=$repo_url" >> "$GITHUB_ENV"
               echo "name_with_owner=$name_with_owner" >> "$GITHUB_ENV"
+              echo "username=$username" >> "$GITHUB_ENV"
     
           - name: Create Job Summary
             run: |
@@ -142,4 +143,5 @@ jobs:
                 echo "|----------------------|------------------------|" >> $GITHUB_STEP_SUMMARY
                 echo "| Student Login        | $student_login         |" >> $GITHUB_STEP_SUMMARY
                 echo "| Repository Name      | $repo_name             |" >> $GITHUB_STEP_SUMMARY
+                echo "| User Name            | $username              |" >> $GITHUB_STEP_SUMMARY
                 echo "| Repository URL       | [$repo_url]($repo_url) |" >> $GITHUB_STEP_SUMMARY
