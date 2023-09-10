@@ -60,12 +60,11 @@ jobs:
                 pytest -v
 
                 # Saving to the log file
-                pytest -v > output.log
+                pytest -v --no-header > output.log
 
                 # Setting it as environment variable
                 pytest_logs=$(cat output.log)
                 echo "pytest_logs=$pytest_logs" >> "$GITHUB_OUTPUT"
-              continue-on-error: true
 
     generate-report:
         name: Grading Report Generation
