@@ -51,7 +51,7 @@ jobs:
                 else
                   bonus_points=0
                 fi
-                echo "bonus_points_gained=bonus_points" >> "$GITHUB_OUTPUT"
+                echo "bonus_points_gained=$bonus_points" >> "$GITHUB_OUTPUT"
               continue-on-error: true
 
             - name: Run the Grading Script
