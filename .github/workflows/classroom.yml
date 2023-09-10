@@ -58,8 +58,13 @@ jobs:
               id: set_pytest_log
               run: |
                 pytest -v
+
+                # Saving to the log file
                 pytest -v > output.log
-                echo "pytest_logs=$(cat output.log)" >> "$GITHUB_OUTPUT"
+
+                # Setting it as environment variable
+                pytest_logs=$(cat output.log)
+                echo "pytest_logs=$pytest_logs" >> "$GITHUB_OUTPUT"
               continue-on-error: true
 
     generate-report:
