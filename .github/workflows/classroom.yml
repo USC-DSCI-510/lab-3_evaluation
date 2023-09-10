@@ -64,7 +64,11 @@ jobs:
 
                 # Setting it as environment variable
                 pytest_logs=$(cat output.log)
-                echo "::set-output name=pytest_logs::$pytest_logs" >> "$GITHUB_OUTPUT"
+                { 
+                  echo "pytest_logs<<EOF 
+                  $pytest_logs 
+                  EOF
+                } >> $GITHUB_OUTPUT
 
     generate-report:
         name: Grading Report Generation
