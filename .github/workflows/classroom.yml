@@ -65,9 +65,9 @@ jobs:
                 # Setting it as environment variable
                 pytest_logs=$(cat output.log)
                 { 
-                  echo "pytest_logs<<EOF 
+                  echo "pytest_logs<<EOF" 
                   $pytest_logs 
-                  EOF
+                  echo EOF
                 } >> $GITHUB_OUTPUT
 
     generate-report:
