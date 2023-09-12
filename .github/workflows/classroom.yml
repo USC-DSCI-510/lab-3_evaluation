@@ -55,10 +55,11 @@ jobs:
               continue-on-error: true
 
             - name: Run the Grading Script
+              run: pytest -v
+
+            - name: Save test logs to job output
               id: set_pytest_log
               run: |
-                pytest -v
-
                 # Saving to the log file
                 pytest -v --no-header > output.log
 
