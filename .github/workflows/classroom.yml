@@ -16,6 +16,7 @@ jobs:
     run-auto-grade:
         name: Autograding
         runs-on: ubuntu-20.04
+        timeout-minutes: 3
 
         outputs:
           bonus_points_gained: ${{ steps.set_bonus_points.outputs.bonus_points_gained }}
@@ -35,7 +36,7 @@ jobs:
                 python-version: '3.x'
 
             - name: Install dependencies
-              run: pip install flake8 black pytest
+              run: pip install -r requirements.txt
 
             - name: Format with Black
               run: |
@@ -63,6 +64,7 @@ jobs:
             - name: Run the Grading Script
               run: pytest -v
               continue-on-error: true
+              timeout-minutes: 1
 
             - name: Save test logs to file
               id: set_pytest_log
@@ -70,6 +72,7 @@ jobs:
                 # Saving to the log file
                 pytest -v --no-header > output.log
               continue-on-error: true
+              timeout-minutes: 2
 
             - name: Extract Marks from logs
               id: marks
@@ -95,6 +98,7 @@ jobs:
     generate-report:
         name: Grading Report Generation
         runs-on: ubuntu-latest
+        timeout-minutes: 1
 
         needs: run-auto-grade
     

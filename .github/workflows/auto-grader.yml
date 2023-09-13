@@ -11,6 +11,7 @@ permissions:
 jobs:
     auto_grade:
         runs-on: ubuntu-latest
+        timeout-minutes: 4
         env:
             GITHUB_TOKEN: ${{ secrets.CLASSROOM_GITHUB_TOKEN }}
             CLASSROOM_ID: ${{ vars.CLASSROOM_ID }}
@@ -54,6 +55,7 @@ jobs:
                     git checkout -b "$branch_name" 
                     
                     # Copy necessary files
+                    cp ../../$EVALUATION_REPO/requirements.txt .
                     cp ../../$EVALUATION_REPO/.github/workflows/classroom.yml ./.github/workflows/classroom.yml
                     cp -r ../../$EVALUATION_REPO/tests .
 
