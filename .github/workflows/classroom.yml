@@ -19,7 +19,12 @@ jobs:
 
         outputs:
           bonus_points_gained: ${{ steps.set_bonus_points.outputs.bonus_points_gained }}
-          pytest_logs: ${{ steps.set_pytest_log.outputs.pytest_logs }}
+          points_gained: ${{ steps.marks.outputs.points_gained }}
+          max_points_possible: ${{ steps.marks.outputs.max_points_possible }}
+          total_points_obtained: ${{ steps.marks.outputs.total_points_obtained }}
+          scaled_points: ${{ steps.marks.outputs.scaled_points }}
+          scaled_max_points_possible: ${{ steps.marks.outputs.scaled_max_points_possible }}
+          max_bonus_points_possible: ${{ steps.marks.outputs.max_bonus_points_possible }}
 
         steps:
             - uses: actions/checkout@v3
@@ -58,20 +63,33 @@ jobs:
               run: pytest -v
               continue-on-error: true
 
-            - name: Save test logs to job output
+            - name: Save test logs to file
               id: set_pytest_log
               run: |
                 # Saving to the log file
                 pytest -v --no-header > output.log
-
-                # Setting it as environment variable
-                pytest_logs=$(cat output.log)
-
-                EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
-                echo "pytest_logs<<$EOF" >> $GITHUB_OUTPUT
-                echo "$pytest_logs" >> $GITHUB_OUTPUT
-                echo "$EOF" >> $GITHUB_OUTPUT
               continue-on-error: true
+
+            - name: Extract Marks from logs
+              id: marks
+              run: |
+                pytest_logs=$(cat output.log | sed 's/\x1B\[[0-9;]*[JKmsu]//g')
+  
+                max_points_possible=$(cat output.log | grep -oP "collected \K\d+")
+      
+                points_gained=$(cat output.log | grep -o "PASSED" | wc -l)
+      
+                scaled_points=$((points_gained / max_points_possible * 30))
+                scaled_max_points_possible=30
+                max_bonus_points_possible=5
+                total_points_obtained=$((scaled_points + bonus_points_gained))
+  
+                echo "points_gained=$points_gained" >> "$GITHUB_OUTPUT"
+                echo "max_points_possible=$max_points_possible" >> "$GITHUB_OUTPUT"
+                echo "total_points_obtained=$total_points_obtained" >> "$GITHUB_OUTPUT"
+                echo "scaled_points=$scaled_points" >> "$GITHUB_OUTPUT"
+                echo "scaled_max_points_possible=$scaled_max_points_possible" >> "$GITHUB_OUTPUT"
+                echo "max_bonus_points_possible=$max_bonus_points_possible" >> "$GITHUB_OUTPUT"
 
     generate-report:
         name: Grading Report Generation
@@ -84,17 +102,14 @@ jobs:
           GITHUB_RUN_ID: ${{ github.run_id }}
 
           bonus_points_gained: ${{ needs.run-auto-grade.outputs.bonus_points_gained }}
-          pytest_logs: ${{ needs.run-auto-grade.outputs.pytest_logs }}
+          points_gained: ${{ needs.run-auto-grade.outputs.points_gained }}
+          max_points_possible: ${{ needs.run-auto-grade.outputs.max_points_possible }}
+          total_points_obtained: ${{ needs.run-auto-grade.outputs.total_points_obtained }}
+          scaled_points: ${{ needs.run-auto-grade.outputs.scaled_points }}
+          scaled_max_points_possible: ${{ needs.run-auto-grade.outputs.scaled_max_points_possible }}
+          max_bonus_points_possible: ${{ needs.run-auto-grade.outputs.max_bonus_points_possible }}
 
         outputs:
-          points_gained: ${{ steps.marks.outputs.points_gained }}
-          max_points_possible: ${{ steps.marks.outputs.max_points_possible }}
-          total_points_obtained: ${{ steps.marks.outputs.total_points_obtained }}
-          scaled_points: ${{ steps.marks.outputs.scaled_points }}
-          scaled_max_points_possible: ${{ steps.marks.outputs.scaled_max_points_possible }}
-          max_bonus_points_possible: ${{ steps.marks.outputs.max_bonus_points_possible }}
-          bonus_points_gained: ${{ needs.run-auto-grade.outputs.bonus_points_gained }}
-
           student_login: ${{ steps.student-metadata.outputs.student_login }}
           repo_name: ${{ steps.student-metadata.outputs.repo_name }}
           repo_url: ${{ steps.student-metadata.outputs.repo_url }}
@@ -103,34 +118,6 @@ jobs:
 
         steps:
           - uses: actions/checkout@v3
-    
-          - name: Extract Marks from logs
-            id: marks
-            run: |
-              pytest_logs=$(echo $pytest_logs | sed 's/\x1B\[[0-9;]*[JKmsu]//g')
-
-              max_points_possible=$(echo $pytest_logs | grep -oP "collected \K\d+")
-    
-              points_gained=$(echo $pytest_logs | grep -o "PASSED" | wc -l)
-    
-              scaled_points=$((points_gained/$max_points_possible * 30))
-              scaled_max_points_possible=30
-              max_bonus_points_possible=5
-              total_points_obtained=$((scaled_points + $bonus_points_gained))
-    
-              echo "points_gained=$points_gained" >> "$GITHUB_ENV"
-              echo "max_points_possible=$max_points_possible" >> "$GITHUB_ENV"
-              echo "total_points_obtained=$total_points_obtained" >> "$GITHUB_ENV"
-              echo "scaled_points=$scaled_points" >> "$GITHUB_ENV"
-              echo "scaled_max_points_possible=$scaled_max_points_possible" >> "$GITHUB_ENV"
-              echo "max_bonus_points_possible=$max_bonus_points_possible" >> "$GITHUB_ENV"
-
-              echo "points_gained=$points_gained" >> "$GITHUB_OUTPUT"
-              echo "max_points_possible=$max_points_possible" >> "$GITHUB_OUTPUT"
-              echo "total_points_obtained=$total_points_obtained" >> "$GITHUB_OUTPUT"
-              echo "scaled_points=$scaled_points" >> "$GITHUB_OUTPUT"
-              echo "scaled_max_points_possible=$scaled_max_points_possible" >> "$GITHUB_OUTPUT"
-              echo "max_bonus_points_possible=$max_bonus_points_possible" >> "$GITHUB_OUTPUT"
     
           - name: Fetch Student Metadata
             id: student-metadata
@@ -141,7 +128,7 @@ jobs:
               repo_url=$(gh repo view $GITHUB_REPOSITORY --json url -q '.url')
               # name_with_owner=$(gh repo view $GITHUB_REPOSITORY --json nameWithOwner -q '.nameWithOwner')
 
-              username="${repo_name#*_}"
+              username=$(echo "$repo_name" | cut -d'-' -f3-)
     
               echo "student_login=$student_login" >> "$GITHUB_ENV"
               echo "repo_name=$repo_name" >> "$GITHUB_ENV"
