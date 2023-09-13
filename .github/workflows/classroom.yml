@@ -57,6 +57,7 @@ jobs:
                   bonus_points=0
                 fi
                 echo "bonus_points_gained=$bonus_points" >> "$GITHUB_OUTPUT"
+                echo "bonus_points_gained=$bonus_points" >> "$GITHUB_ENV"
               continue-on-error: true
 
             - name: Run the Grading Script
@@ -75,14 +76,14 @@ jobs:
               run: |
                 pytest_logs=$(cat output.log | sed 's/\x1B\[[0-9;]*[JKmsu]//g')
   
-                max_points_possible=$(cat output.log | grep -oP "collected \K\d+")
+                max_points_possible=$(echo "$pytest_logs" | grep -oP "collected \K\d+")
       
-                points_gained=$(cat output.log | grep -o "PASSED" | wc -l)
+                points_gained=$(echo "$pytest_logs" | grep -o "PASSED" | wc -l)
       
-                scaled_points=$((points_gained / max_points_possible * 30))
+                scaled_points=$(echo "scale=2; $points_gained / $max_points_possible * 30" | bc)
                 scaled_max_points_possible=30
                 max_bonus_points_possible=5
-                total_points_obtained=$((scaled_points + bonus_points_gained))
+                total_points_obtained=$(echo "scale=2; $scaled_points + $bonus_points_gained" | bc)
   
                 echo "points_gained=$points_gained" >> "$GITHUB_OUTPUT"
                 echo "max_points_possible=$max_points_possible" >> "$GITHUB_OUTPUT"
