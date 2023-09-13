@@ -23,6 +23,7 @@ from lab3 import sum_of_squares_of_digits, is_happy_number, is_acceptable
         (-47385729384012481023847121356, "Exception"),
     ],
 )
+@pytest.mark.timeout(0.03)
 def test_sum_of_squares_of_digits(num, ans):
     if ans == "Exception":
         with pytest.raises(Exception):
@@ -56,6 +57,7 @@ def test_sum_of_squares_of_digits(num, ans):
         (441954225, True),
     ],
 )
+@pytest.mark.timeout(0.03)
 def test_is_happy_number(num, ans):
     if ans == "Exception":
         with pytest.raises(Exception):
@@ -89,5 +91,6 @@ def test_is_happy_number(num, ans):
         ("qwerty12345&*(&%&^$&)+897", False),
     ],
 )
+@pytest.mark.timeout(0.03)
 def test_is_acceptable(password, ans):
     assert is_acceptable(password) == ans
