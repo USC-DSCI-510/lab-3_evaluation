@@ -56,6 +56,7 @@ jobs:
 
             - name: Run the Grading Script
               run: pytest -v
+              continue-on-error: true
 
             - name: Save test logs to job output
               id: set_pytest_log
@@ -70,6 +71,7 @@ jobs:
                 echo "pytest_logs<<$EOF" >> $GITHUB_OUTPUT
                 echo "$pytest_logs" >> $GITHUB_OUTPUT
                 echo "$EOF" >> $GITHUB_OUTPUT
+              continue-on-error: true
 
     generate-report:
         name: Grading Report Generation

@@ -57,8 +57,11 @@ jobs:
                     cp ../../$EVALUATION_REPO/.github/workflows/classroom.yml ./.github/workflows/classroom.yml
                     cp -r ../../$EVALUATION_REPO/tests .
 
-                    # Remove test.py
-                    rm test.py
+                    # Check if test.py exists before removing it
+                    if [ -e test.py ]; then
+                      # Remove test.py
+                      rm test.py
+                    fi
                     
                     # Commit changes and push changes
                     git add .
