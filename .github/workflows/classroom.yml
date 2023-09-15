@@ -118,7 +118,7 @@ jobs:
           student_login: ${{ steps.student-metadata.outputs.student_login }}
           repo_name: ${{ steps.student-metadata.outputs.repo_name }}
           repo_url: ${{ steps.student-metadata.outputs.repo_url }}
-          # name_with_owner: ${{ steps.student-metadata.outputs.name_with_owner }}
+          name_with_owner: ${{ steps.student-metadata.outputs.name_with_owner }}
           username: ${{ steps.student-metadata.outputs.username }}
 
         steps:
@@ -138,13 +138,13 @@ jobs:
               echo "student_login=$student_login" >> "$GITHUB_ENV"
               echo "repo_name=$repo_name" >> "$GITHUB_ENV"
               echo "repo_url=$repo_url" >> "$GITHUB_ENV"
-              # echo "name_with_owner=$name_with_owner" >> "$GITHUB_ENV"
+              echo "name_with_owner=$name_with_owner" >> "$GITHUB_ENV"
               echo "username=$username" >> "$GITHUB_ENV"
 
               echo "student_login=$student_login" >> "$GITHUB_OUTPUT"
               echo "repo_name=$repo_name" >> "$GITHUB_OUTPUT"
               echo "repo_url=$repo_url" >> "$GITHUB_OUTPUT"
-              # echo "name_with_owner=$name_with_owner" >> "$GITHUB_OUTPUT"
+              echo "name_with_owner=$name_with_owner" >> "$GITHUB_OUTPUT"
               echo "username=$username" >> "$GITHUB_OUTPUT"
     
           - name: Create Job Summary
