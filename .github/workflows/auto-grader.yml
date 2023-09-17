@@ -43,6 +43,8 @@ jobs:
 
             - name: Clone Student Repositories
               run: |
+                cd "$SUBMISSION_DIR"
+              
                 for username in $(cat student_roster.txt); do
                   # Construct the repository name based on the pattern
                   repo_name="USC-DSCI-510/lab-3-$username"
@@ -50,6 +52,8 @@ jobs:
                   # Clone the repository for the current student
                   gh repo clone "$repo_name" -- --depth 1
                 done
+                
+                cd ..
               continue-on-error: true
             
             - name: Set Git Configuration
