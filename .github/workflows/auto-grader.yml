@@ -48,8 +48,11 @@ jobs:
                 cd "$SUBMISSION_DIR"
               
                 for username in $(cat student_roster.txt); do
+                  username="${username// /}"
+                  repo_name="USC-DSCI-510/lab-3-$username"
+
                   # Clone the repository for the current student
-                  gh repo clone USC-DSCI-510/lab-3-$username -- --depth 1
+                  gh repo clone $repo_name -- --depth 1
                 done
                 
                 cd ..
