@@ -38,6 +38,7 @@ jobs:
 
             - name: Read Student Roster
               run: |
+                mkdir $SUBMISSION_DIR
                 # Copy student_roster to submission directory
                 cp $EVALUATION_REPO/.github/workflows/student_roster.txt  $SUBMISSION_DIR/student_roster.txt
                 cat $SUBMISSION_DIR/student_roster.txt
