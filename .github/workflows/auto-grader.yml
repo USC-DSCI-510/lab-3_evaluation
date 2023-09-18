@@ -11,7 +11,7 @@ permissions:
 jobs:
     auto_grade:
         runs-on: ubuntu-latest
-        timeout-minutes: 4
+        timeout-minutes: 5
         env:
             GITHUB_TOKEN: ${{ secrets.CLASSROOM_GITHUB_TOKEN }}
             CLASSROOM_ID: ${{ vars.CLASSROOM_ID }}
@@ -38,8 +38,9 @@ jobs:
 
             - name: Read Student Roster
               run: |
-                cat student_roster.txt  # Adjust the filename as needed and make sure it's in the same directory
-              continue-on-error: true
+                # Copy student_roster to submission directory
+                cp $EVALUATION_REPO/.github/workflows/student_roster.txt  $SUBMISSION_DIR/student_roster.txt
+                cat $SUBMISSION_DIR/student_roster.txt
 
             - name: Clone Student Repositories
               run: |
@@ -54,7 +55,7 @@ jobs:
                 done
                 
                 cd ..
-              continue-on-error: true
+              timeout-minutes: 2
             
             - name: Set Git Configuration
               run: |
@@ -93,7 +94,7 @@ jobs:
                     cd ..
                   fi
                 done
-              continue-on-error: true
+              timeout-minutes: 3
 
             - name: Cleanup Cloned Repositories
               run: |
