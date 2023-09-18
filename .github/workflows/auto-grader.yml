@@ -48,7 +48,7 @@ jobs:
                 cd "$SUBMISSION_DIR"
               
                 for username in $(cat student_roster.txt); do
-                  username="${username// /}"
+                  username=$(echo "$username" | tr -d '[:space:]')
                   repo_name="USC-DSCI-510/lab-3-$username"
 
                   # Clone the repository for the current student
