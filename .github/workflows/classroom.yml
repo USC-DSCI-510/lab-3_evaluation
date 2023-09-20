@@ -55,11 +55,11 @@ jobs:
               run: |
                 bonus_points=0
                 if [[ ${{ steps.bonus_pep8_linter_check_flake8.outcome }} == 'success' ]]; then
-                  bonus_points=$(echo "scale=2; $bonus_points + 2.5" | bc)
+                  bonus_points=$(echo "scale=2; $bonus_points + 5" | bc)
                 fi
-                if [[ ${{ steps.formatting_check.outcome }} == 'success' ]]; then
-                  bonus_points=$(echo "scale=2; $bonus_points + 2.5" | bc)
-                fi
+                # if [[ ${{ steps.formatting_check.outcome }} == 'success' ]]; then
+                #   bonus_points=$(echo "scale=2; $bonus_points + 2.5" | bc)
+                # fi
                 echo "bonus_points_gained=$bonus_points" >> "$GITHUB_OUTPUT"
                 echo "bonus_points_gained=$bonus_points" >> "$GITHUB_ENV"
               continue-on-error: true
